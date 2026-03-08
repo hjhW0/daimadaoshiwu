@@ -1,47 +1,324 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>我的个人日志</title>
+    <title>何俊华的个人日志 | 计算机2024-02班</title>
+    <!-- 引入图标库 -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: "Microsoft YaHei", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
-        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ddd; }
-        .header h1 { color: #333; margin-bottom: 10px; }
-        .header p { color: #666; }
-        .log-list { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-        .log-item { padding: 15px 0; border-bottom: 1px dashed #eee; }
-        .log-item:last-child { border-bottom: none; }
-        .log-title { font-size: 18px; color: #2c3e50; text-decoration: none; }
-        .log-title:hover { color: #0078e7; }
-        .log-date { font-size: 14px; color: #999; margin-top: 5px; }
-        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        /* 主题变量（暗黑/亮色切换） */
+        :root {
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --text-light: #666666;
+            --primary-color: #4096ff;
+            --border-color: #e5e7eb;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #f5f5f5;
+            --text-light: #b0b0b0;
+            --primary-color: #69b1ff;
+            --border-color: #444444;
+            --shadow-color: rgba(0, 0, 0, 0.2);
+        }
+
+        body {
+            font-family: "Inter", "Microsoft YaHei", sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            padding-bottom: 80px;
+        }
+
+        /* 顶部导航 */
+        .header {
+            padding: 30px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 280px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* 分类标签 */
+        .category-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .tag.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .tag:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px var(--shadow-color);
+        }
+
+        /* 空日志提示 */
+        .empty-tip {
+            text-align: center;
+            padding: 80px 0;
+            color: var(--text-light);
+            font-size: 16px;
+        }
+
+        .empty-tip i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        /* 页脚（含个人信息） */
+        .footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .footer .info {
+            margin-top: 8px;
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        /* 返回顶部按钮 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(64, 150, 255, 0.3);
+        }
+
+        .back-to-top.show {
+            display: flex;
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+        }
+
+        /* 响应式适配（手机端） */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>我的个人日志</h1>
-        <p>记录日常学习与思考</p>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="logo">
+            <i class="fas fa-book-open"></i>
+            <span>我的个人日志</span>
+        </div>
+        <div class="header-actions">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="搜索日志标题/内容...">
+            </div>
+            <button class="theme-toggle" id="themeToggle">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 分类标签 -->
+    <div class="category-tags">
+        <div class="tag active" data-category="all">全部</div>
+        <div class="tag" data-category="git">Git学习</div>
+        <div class="tag" data-category="cpp">C++编程</div>
+        <div class="tag" data-category="algorithm">算法</div>
+        <div class="tag" data-category="daily">日常记录</div>
     </div>
 
-    <div class="log-list">
-        <div class="log-item">
-            <a href="log1.html" class="log-title">2026-03-08：学习Git上传项目</a>
-            <p class="log-date">发布时间：2026-03-08 15:00</p>
-        </div>
-        <div class="log-item">
-            <a href="log2.html" class="log-title">2026-03-07：学习C++递推与递归</a>
-            <p class="log-date">发布时间：2026-03-07 10:30</p>
-        </div>
-        <div class="log-item">
-            <a href="log3.html" class="log-title">2026-03-06：汉诺塔递归逻辑梳理</a>
-            <p class="log-date">发布时间：2026-03-06 14:20</p>
-        </div>
+    <!-- 空日志提示 -->
+    <div class="empty-tip">
+        <i class="fas fa-file-alt"></i>
+        <p>暂无日志记录，期待你的第一篇分享～</p>
     </div>
 
+    <!-- 页脚（含个人信息） -->
     <div class="footer">
         <p>© 2026 我的个人日志 | 托管于 Gitee</p>
+        <p class="info">何俊华 2024112585 | 计算机2024—02班</p>
     </div>
+
+    <!-- 返回顶部按钮 -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- 功能脚本：暗黑模式、搜索、返回顶部 -->
+    <script>
+        // 暗黑模式切换
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const moonIcon = themeToggle.querySelector('i');
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                moonIcon.classList.remove('fa-moon');
+                moonIcon.classList.add('fa-sun');
+            } else {
+                moonIcon.classList.remove('fa-sun');
+                moonIcon.classList.add('fa-moon');
+            }
+        });
+
+        // 日志分类筛选（空状态无需筛选，仅保留交互）
+        const tags = document.querySelectorAll('.tag');
+        tags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                tags.forEach(t => t.classList.remove('active'));
+                tag.classList.add('active');
+            });
+        });
+
+        // 搜索功能（空状态提示）
+        const searchInput = document.querySelector('.search-box input');
+        searchInput.addEventListener('input', () => {
+            const emptyTip = document.querySelector('.empty-tip p');
+            if (searchInput.value.trim()) {
+                emptyTip.textContent = `未找到“${searchInput.value}”相关日志`;
+            } else {
+                emptyTip.textContent = '暂无日志记录，期待你的第一篇分享～';
+            }
+        });
+
+        // 返回顶部
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html>
