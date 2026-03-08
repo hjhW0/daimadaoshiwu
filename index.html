@@ -1,0 +1,47 @@
+ <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的个人日志</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ddd; }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .header p { color: #666; }
+        .log-list { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .log-item { padding: 15px 0; border-bottom: 1px dashed #eee; }
+        .log-item:last-child { border-bottom: none; }
+        .log-title { font-size: 18px; color: #2c3e50; text-decoration: none; }
+        .log-title:hover { color: #0078e7; }
+        .log-date { font-size: 14px; color: #999; margin-top: 5px; }
+        .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>我的个人日志</h1>
+        <p>记录日常学习与思考</p>
+    </div>
+
+    <div class="log-list">
+        <div class="log-item">
+            <a href="log1.html" class="log-title">2026-03-08：学习Git上传项目</a>
+            <p class="log-date">发布时间：2026-03-08 15:00</p>
+        </div>
+        <div class="log-item">
+            <a href="log2.html" class="log-title">2026-03-07：学习C++递推与递归</a>
+            <p class="log-date">发布时间：2026-03-07 10:30</p>
+        </div>
+        <div class="log-item">
+            <a href="log3.html" class="log-title">2026-03-06：汉诺塔递归逻辑梳理</a>
+            <p class="log-date">发布时间：2026-03-06 14:20</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 我的个人日志 | 托管于 Gitee</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026-03-08：学习Git上传项目 - 我的个人日志</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: "Microsoft YaHei", sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; background: #f5f5f5; }
+        .header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #ddd; }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .header p { color: #666; }
+        .log-content { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); line-height: 1.8; color: #333; }
+        .log-content h3 { margin: 20px 0 10px; color: #2c3e50; }
+        .log-content p { margin-bottom: 15px; }
+        .back { display: inline-block; margin-top: 20px; color: #0078e7; text-decoration: none; }
+        .back:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>2026-03-08：学习Git上传项目</h1>
+        <p>发布时间：2026-03-08 15:00</p>
+    </div>
+
+    <div class="log-content">
+        <p>今天学习了Git的核心操作，包括：</p>
+        <h3>1. 克隆远程仓库</h3>
+        <p>使用 git clone 命令将Gitee上的仓库复制到本地，注意路径不能有中文。</p>
+        <h3>2. 提交本地修改</h3>
+        <p>通过 git add . 暂存所有修改，git commit -m "说明" 提交到本地仓库。</p>
+        <h3>3. 推送到远程</h3>
+        <p>使用 git push 把本地提交推送到Gitee，首次推送需要输入账号密码。</p>
+        <p>遇到的问题：首次push提示权限不足，后来确认是仓库路径输错了，修正后成功。</p>
+    </div>
+
+    <a href="index.html" class="back">← 返回日志列表</a>
+</body>
+</html>
