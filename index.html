@@ -606,6 +606,13 @@
 
         <h3>学习心得</h3>
         <p>通过本课程的 Git 学习，我掌握了版本控制的基本概念和常用操作。从最初的 <code>git init</code> 到使用分支进行协作开发，Git 让我体会到代码管理的规范性和重要性。使用 Gitee 托管代码后，也更加理解了远程协作的工作流程。</p>
+
+        <h3>学习过程记录</h3>
+        <div class="gallery">
+            <div class="gallery-item"><img src="gite1.png" alt="学习材料" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="gite2.png" alt="学习过程1" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="gite3.png" alt="学习过程2" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+        </div>
     </section>
 
     <!-- 4. 3D设计、3D打印 -->
@@ -655,10 +662,11 @@
         </div>
 
         <h3>实践作品</h3>
-        <div class="img-placeholder">
-            <span class="icon">&#128444;</span>
-            在此插入 3D 设计截图<br>
-            <small>已准备 STL 文件：shiwu1.stl</small>
+        <div class="gallery">
+            <div class="gallery-item"><img src="dayin1.png" alt="3D打印过程1" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="dayin2.jpg" alt="3D打印过程2" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="dayin3.jpg" alt="3D打印过程3" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="dayin4.jpg" alt="3D打印过程4" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
         </div>
     </section>
 
@@ -710,6 +718,11 @@
                 </tbody>
             </table>
         </div>
+
+        <h3>焊接实践</h3>
+        <div class="gallery">
+            <div class="gallery-item"><img src="dianzihanjie.jpg" alt="电子焊接实践" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+        </div>
     </section>
 
     <!-- 6. 嵌入式计算 -->
@@ -733,26 +746,57 @@
             </table>
         </div>
 
-        <h3>Arduino 入门示例：LED 闪烁</h3>
+        <h3>ESP32 实践项目：WiFi 智能门锁</h3>
+        <p>基于 ESP32 的 WiFi 智能门锁系统，通过 ESP32 自建 WiFi 热点，用户连接后在手机浏览器上即可远程控制门锁的开关，同时支持物理按钮手动开锁。</p>
+
+        <h4>系统架构</h4>
+        <div class="table-wrap">
+            <table class="styled-table">
+                <thead>
+                    <tr><th>模块</th><th>引脚</th><th>功能</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>舵机 SG90</td><td>GPIO 2</td><td>驱动锁舌，0&deg; 关锁 / 90&deg; 开锁</td></tr>
+                    <tr><td>LED 指示灯</td><td>GPIO 5</td><td>开锁亮灯、关锁灭灯</td></tr>
+                    <tr><td>物理按钮</td><td>GPIO 4</td><td>手动切换开/关锁（带消抖）</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>核心代码解析</h4>
         <div class="code-block">
-            <div class="code-header"><span>cpp</span><span>Blink.ino</span></div>
-<pre><span class="cmt">// LED 闪烁 - Arduino 经典入门程序</span>
-<span class="kw">const int</span> ledPin = <span class="flag">13</span>;
+            <div class="code-header"><span>cpp</span><span>ESP32 智能门锁</span></div>
+<pre><span class="cmt">// WiFi 热点配置</span>
+<span class="kw">const char</span>* ssid = <span class="str">"ESP32_Lock"</span>;
+<span class="kw">const char</span>* password = <span class="str">"12345678"</span>;
+<span class="cmd">WiFi.softAP</span>(ssid, password);
 
-<span class="kw">void</span> <span class="cmd">setup</span>() {
-    <span class="cmd">pinMode</span>(ledPin, OUTPUT);
-}
+<span class="cmt">// 舵机控制 — 两个角度对应开/关锁</span>
+<span class="kw">const int</span> LOCK_ANGLE = <span class="flag">0</span>;
+<span class="kw">const int</span> UNLOCK_ANGLE = <span class="flag">90</span>;
+<span class="cmd">myServo.write</span>(isLocked ? LOCK_ANGLE : UNLOCK_ANGLE);
 
-<span class="kw">void</span> <span class="cmd">loop</span>() {
-    <span class="cmd">digitalWrite</span>(ledPin, HIGH);   <span class="cmt">// 点亮 LED</span>
-    <span class="cmd">delay</span>(<span class="flag">1000</span>);                  <span class="cmt">// 等待 1 秒</span>
-    <span class="cmd">digitalWrite</span>(ledPin, LOW);    <span class="cmt">// 熄灭 LED</span>
-    <span class="cmd">delay</span>(<span class="flag">1000</span>);                  <span class="cmt">// 等待 1 秒</span>
+<span class="cmt">// Web 路由 — 点击网页按钮触发</span>
+<span class="cmd">server.on</span>(<span class="str">"/"</span>, handleRoot);      <span class="cmt">// 首页显示状态</span>
+<span class="cmd">server.on</span>(<span class="str">"/lock"</span>, handleLock);    <span class="cmt">// 关锁</span>
+<span class="cmd">server.on</span>(<span class="str">"/unlock"</span>, handleUnlock);<span class="cmt">// 开锁</span>
+
+<span class="cmt">// 物理按钮 — 消抖后切换状态</span>
+<span class="kw">if</span> ((<span class="cmd">millis</span>() - lastDebounceTime) > debounceDelay) {
+    <span class="kw">if</span> (buttonState == LOW) <span class="cmd">setLock</span>(!isLocked);
 }</pre>
         </div>
 
+        <h4>网页控制界面</h4>
+        <p>ESP32 作为 Web Server，内置简洁的 HTML 控制页面。手机连接 WiFi 热点后，浏览器访问 <code>192.168.4.1</code> 即可看到当前锁状态，并通过"开锁""关锁"按钮远程控制。</p>
+
+        <h4>学习过程</h4>
+        <div class="gallery">
+            <div class="gallery-item"><img src="qianrushi.jpg" alt="嵌入式学习过程" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+        </div>
+
         <h3>学习心得</h3>
-        <p>通过嵌入式计算的学习，我了解了微控制器的工作原理和 GPIO 的基本操作。从点亮第一颗 LED 到读取传感器数据，每一步都让我对硬件编程有了更深的理解。Arduino 的易用性让初学者能够快速上手，而 ESP32 的 WiFi 功能则打开了物联网的大门。</p>
+        <p>通过嵌入式计算的学习，我了解了微控制器的工作原理和 GPIO 的基本操作。从点亮第一颗 LED 到完成 WiFi 智能门锁项目，每一步都让我对硬件编程有了更深的理解。ESP32 的 WiFi 功能让我体验到了物联网的魅力——用手机就能远程控制物理设备，这种"软硬结合"的感觉非常有成就感。</p>
     </section>
 
     <!-- 7. 中期创客项目 -->
@@ -764,54 +808,47 @@
         <div class="table-wrap">
             <table class="styled-table team-table">
                 <thead>
-                    <tr><th>成员</th><th>角色</th><th>负责内容</th></tr>
+                    <tr><th>成员</th><th>负责内容</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>何俊华</td><td>队长 / 软件开发</td><td>程序编写、系统调试</td></tr>
-                    <tr><td>待补充</td><td>硬件工程师</td><td>电路设计、焊接组装</td></tr>
-                    <tr><td>待补充</td><td>结构设计</td><td>3D 建模、外壳制作</td></tr>
+                    <tr><td>何俊华</td><td>ESP32 程序编写、WiFi 控制逻辑开发</td></tr>
+                    <tr><td>李虹汶</td><td>电路焊接、硬件组装调试</td></tr>
+                    <tr><td>罗一航</td><td>3D 建模、蛇形外壳设计与打印</td></tr>
                 </tbody>
             </table>
         </div>
-        <div class="img-placeholder">
-            <span class="icon">&#128247;</span>
-            在此插入团队合照
-        </div>
+
+        <h3>项目简介</h3>
+        <p>本项目制作了一个 <strong>WiFi 控制的蛇形灯</strong>：使用 3D 打印制作蛇形模型外壳，内部嵌入 LED 灯带，通过 ESP32 建立 WiFi 热点，手机连接后在网页上即可远程控制灯的亮灭。</p>
 
         <h3>制作过程</h3>
         <div class="timeline">
             <div class="timeline-item">
                 <h4>需求分析</h4>
-                <p>确定项目方向，调研现有方案，明确功能需求和约束条件。</p>
+                <p>确定项目目标为"WiFi 控制蛇形灯"，调研 ESP32 WiFi 控制方案和 3D 打印蛇形结构的可行性，明确功能需求：手机远程开关灯、蛇形外观美观、内部可嵌入 LED。</p>
             </div>
             <div class="timeline-item">
                 <h4>方案设计</h4>
-                <p>绘制系统框图，选择核心器件，制定技术路线。</p>
+                <p>选择 ESP32 作为主控芯片（自带 WiFi），设计系统架构：ESP32 建立热点 &rarr; 手机连接 &rarr; 网页控制 &rarr; GPIO 驱动 LED。同步规划蛇形模型的 3D 结构，确保内部有足够空间走线和安装 LED。</p>
             </div>
             <div class="timeline-item">
                 <h4>原型制作</h4>
-                <p>搭建电路原型，编写基础程序，验证核心功能。</p>
+                <p>在面包板上搭建 ESP32 + LED 电路原型，编写基础 WiFi 控制程序并测试通过。使用 TinkerCAD / Fusion 360 完成蛇形模型的 3D 建模，分段设计便于打印和组装。</p>
             </div>
             <div class="timeline-item">
                 <h4>集成调试</h4>
-                <p>组装各模块，联调测试，修复问题。</p>
+                <p>将 LED 灯带装入 3D 打印的蛇形外壳中，焊接 ESP32 与 LED 的连接电路，联调 WiFi 控制功能，确保网页按钮能准确控制灯的亮灭。</p>
             </div>
             <div class="timeline-item">
                 <h4>优化完善</h4>
-                <p>改进外观设计，优化用户体验，撰写文档。</p>
+                <p>优化网页控制界面的显示效果，改进蛇形模型的外观细节（打磨、上色），调整 LED 亮度和散热，撰写项目文档和使用说明。</p>
             </div>
         </div>
 
-        <h3>成果演示</h3>
+        <h3>成果展示</h3>
         <div class="gallery">
-            <div class="gallery-item">&#128248; 成果照片 1</div>
-            <div class="gallery-item">&#128248; 成果照片 2</div>
-            <div class="gallery-item">&#128248; 成果照片 3</div>
-        </div>
-        <div class="img-placeholder">
-            <span class="icon">&#127909;</span>
-            在此插入演示视频<br>
-            <small>&lt;video src="demo.mp4" controls&gt;&lt;/video&gt;</small>
+            <div class="gallery-item"><img src="qizhong1.jpg" alt="中期项目成果1" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="qizhong2.jpg" alt="中期项目成果2" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
         </div>
     </section>
 
@@ -857,10 +894,9 @@
         </ul>
 
         <h3>设计实践</h3>
-        <div class="img-placeholder">
-            <span class="icon">&#128444;</span>
-            在此插入 PCB 设计截图<br>
-            <small>建议展示原理图和 PCB 布局图</small>
+        <div class="gallery">
+            <div class="gallery-item"><img src="pcb1.png" alt="PCB设计1" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="pcb2.png" alt="PCB设计2" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
         </div>
     </section>
 
@@ -924,65 +960,143 @@
         <div class="table-wrap">
             <table class="styled-table team-table">
                 <thead>
-                    <tr><th>成员</th><th>角色</th><th>负责内容</th></tr>
+                    <tr><th>成员</th><th>负责内容</th></tr>
                 </thead>
                 <tbody>
-                    <tr><td>何俊华</td><td>队长 / 软件开发</td><td>程序编写、系统调试</td></tr>
-                    <tr><td>待补充</td><td>硬件工程师</td><td>电路设计、焊接组装</td></tr>
-                    <tr><td>待补充</td><td>结构设计</td><td>3D 建模、外壳制作</td></tr>
+                    <tr><td>何俊华</td><td>软件开发、主程序编写与调试</td></tr>
+                    <tr><td>李虹汶</td><td>硬件焊接、电路搭建与调试</td></tr>
+                    <tr><td>李成家</td><td>PCB 设计、电路板打样与优化</td></tr>
+                    <tr><td>罗一航</td><td>3D 建模、外壳设计与打印</td></tr>
+                    <tr><td>李纪彤</td><td>项目文档、测试验证与展示</td></tr>
                 </tbody>
             </table>
         </div>
-        <div class="img-placeholder">
-            <span class="icon">&#128247;</span>
-            在此插入团队合照
-        </div>
 
         <h3>项目背景与目标</h3>
-        <p>待补充 &mdash; 在此描述项目的灵感来源、要解决的问题、预期达成的目标。</p>
+        <p>国际象棋是一项历史悠久的智力运动，正式比赛中需要使用棋钟来控制双方的思考时间。市面的专业棋钟价格较高且功能单一，我们决定利用创客课程所学知识，设计制作一款 <strong>基于 ESP32-C3 的双屏国际象棋计时器</strong>。</p>
+        <p>项目目标：</p>
+        <ul>
+            <li>实现双屏独立显示，白方黑方各自倒计时</li>
+            <li>支持按键切换当前计时方，模拟真实棋钟操作</li>
+            <li>具备暂停/继续、重置功能</li>
+            <li>超时自动判负，屏幕颜色变化提示</li>
+            <li>外观便携、操作直观，可用于实际对弈</li>
+        </ul>
+
+        <h3>系统设计</h3>
+        <div class="table-wrap">
+            <table class="styled-table">
+                <thead>
+                    <tr><th>模块</th><th>型号/规格</th><th>功能</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>主控芯片</td><td>ESP32-C3</td><td>核心控制，处理按键与计时逻辑</td></tr>
+                    <tr><td>显示屏</td><td>TFT ST7735 × 2</td><td>分别显示白方和黑方剩余时间</td></tr>
+                    <tr><td>按键</td><td>4 个微动开关</td><td>K1 重置 / K2 暂停 / K3 白方 / K4 黑方</td></tr>
+                    <tr><td>初始时间</td><td>15 分钟</td><td>每方默认 15 分钟倒计时</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h4>核心代码逻辑</h4>
+        <div class="code-block">
+            <div class="code-header"><span>cpp</span><span>按键切换计时方</span></div>
+<pre><span class="cmt">// K3：白方按下，黑方开始计时</span>
+<span class="kw">if</span> (<span class="cmd">getButtonPressed</span>(<span class="flag">2</span>)) {
+    <span class="kw">if</span> (!gameOver) {
+        activePlayer = BLACK;
+        running = <span class="kw">true</span>;
+        lastUpdateMs = <span class="cmd">millis</span>();
+        <span class="cmd">updateDisplay</span>();
+    }
+}
+
+<span class="cmt">// K4：黑方按下，白方开始计时</span>
+<span class="kw">if</span> (<span class="cmd">getButtonPressed</span>(<span class="flag">3</span>)) {
+    <span class="kw">if</span> (!gameOver) {
+        activePlayer = WHITE;
+        running = <span class="kw">true</span>;
+        lastUpdateMs = <span class="cmd">millis</span>();
+        <span class="cmd">updateDisplay</span>();
+    }
+}</pre>
+        </div>
 
         <h3>制作过程</h3>
         <div class="timeline">
             <div class="timeline-item">
-                <h4>需求调研</h4>
-                <p>运用设计思维，深入了解目标用户的真实需求。</p>
+                <h4>需求分析与方案设计</h4>
+                <p>调研市面棋钟产品，明确功能需求：双屏显示、按键切换、暂停重置、超时判负。确定以 ESP32-C3 为主控，双 ST7735 TFT 屏为显示方案，分工协作开发。</p>
             </div>
             <div class="timeline-item">
-                <h4>概念设计</h4>
-                <p>确定技术方案，绘制系统架构图，分配任务。</p>
+                <h4>硬件搭建与焊接</h4>
+                <p>根据引脚定义搭建电路，焊接 ESP32-C3 与两块 TFT 屏的连接，安装 4 个功能按键并接入 GPIO 引脚，使用面包板验证电路可行性。</p>
             </div>
             <div class="timeline-item">
-                <h4>硬件开发</h4>
-                <p>设计 PCB、焊接电路、调试传感器和执行器。</p>
+                <h4>软件开发与调试</h4>
+                <p>编写主程序，实现计时逻辑、按键消抖、屏幕刷新等功能。通过串口打印状态信息辅助调试，确保计时准确、切换流畅。</p>
             </div>
             <div class="timeline-item">
-                <h4>软件开发</h4>
-                <p>编写嵌入式程序、开发上位机或手机端应用。</p>
+                <h4>PCB 设计与打样</h4>
+                <p>将面包板电路转化为 PCB 设计，使用立创 EDA 绘制原理图和布局，打样制造成品电路板，提升整体稳定性和美观度。</p>
             </div>
             <div class="timeline-item">
-                <h4>外壳与结构</h4>
-                <p>3D 打印外壳，组装所有模块，完成整机集成。</p>
+                <h4>外壳设计与 3D 打印</h4>
+                <p>根据 PCB 和屏幕尺寸设计外壳，使用 Fusion 360 建模，3D 打印制作外壳，预留按键孔位和屏幕开窗，确保组装紧凑。</p>
             </div>
             <div class="timeline-item">
-                <h4>测试优化</h4>
-                <p>全面测试各项功能，收集反馈，持续迭代改进。</p>
+                <h4>整机组装与测试</h4>
+                <p>将 PCB、屏幕、按键装入外壳，进行完整功能测试：计时准确性、按键响应、超时判负、屏幕显示效果，修复发现的问题并优化体验。</p>
             </div>
         </div>
 
-        <h3>成果演示</h3>
-        <div class="gallery">
-            <div class="gallery-item">&#128248; 项目照片 1</div>
-            <div class="gallery-item">&#128248; 项目照片 2</div>
-            <div class="gallery-item">&#128248; 项目照片 3</div>
+        <h3>技术亮点</h3>
+        <div class="keyword-grid">
+            <div class="keyword-card">
+                <div class="icon">&#128241;</div>
+                <h4>双屏独立显示</h4>
+                <p>两块 TFT 屏通过 CS 片选独立控制，同时显示双方时间</p>
+            </div>
+            <div class="keyword-card">
+                <div class="icon">&#9889;</div>
+                <h4>精准按键消抖</h4>
+                <p>40ms 消抖延迟，确保按键响应可靠，避免误触发</p>
+            </div>
+            <div class="keyword-card">
+                <div class="icon">&#127912;</div>
+                <h4>状态颜色反馈</h4>
+                <p>计时中蓝色、暂停黑色、超时红色、胜利绿色</p>
+            </div>
+            <div class="keyword-card">
+                <div class="icon">&#128260;</div>
+                <h4>软硬件结合</h4>
+                <p>ESP32 程序 + 自制 PCB + 3D 外壳，完整产品化</p>
+            </div>
         </div>
-        <div class="img-placeholder">
-            <span class="icon">&#127909;</span>
-            在此插入演示视频<br>
-            <small>&lt;video src="final-demo.mp4" controls&gt;&lt;/video&gt;</small>
+
+        <h3>成果展示</h3>
+        <div class="gallery">
+            <div class="gallery-item"><img src="qimo1.jpg" alt="期末项目成果1" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="qimo2.jpg" alt="期末项目成果2" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="qimo3.jpg" alt="期末项目成果3" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
+            <div class="gallery-item"><img src="qimo4.jpg" alt="期末项目成果4" style="width:100%;height:100%;object-fit:cover;border-radius:10px;"></div>
         </div>
 
         <h3>总结与展望</h3>
-        <p>待补充 &mdash; 在此总结项目的收获、遇到的挑战、未来的改进方向。</p>
+        <p>通过本次期末项目，我们将创客课程中学到的 3D 设计、电子焊接、PCB 设计、嵌入式编程等技能综合运用，完成了一个从设计到成品的完整产品开发过程。国际象棋计时器不仅是一个功能性的硬件作品，更是团队协作与工程实践的成果。</p>
+        <p><strong>遇到的挑战：</strong></p>
+        <ul>
+            <li>双屏同时驱动时的 SPI 总线冲突问题，通过 CS 片选时序优化解决</li>
+            <li>按键消抖的参数调优，需要在响应速度和防误触之间找到平衡</li>
+            <li>外壳与 PCB 的配合精度，多次迭代打印才达到理想效果</li>
+        </ul>
+        <p><strong>未来改进方向：</strong></p>
+        <ul>
+            <li>增加时间设置功能，支持多种时间规则（5分钟快棋、30分钟慢棋等）</li>
+            <li>加入蜂鸣器，超时时发出声音提示</li>
+            <li>添加走棋计数和历史记录功能</li>
+            <li>优化电源管理，增加电池供电和低功耗模式</li>
+        </ul>
     </section>
 
 </main>
